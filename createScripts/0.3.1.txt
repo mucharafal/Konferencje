@@ -1,0 +1,3 @@
+Dodanie tabel CompanyReservations i PrivateReservations
+Dodanie identity do kluczy tabel utworzonych w 0.3
+Usuniêcie z Reservations kolumn paid, date

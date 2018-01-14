@@ -1,0 +1,6 @@
+create view TimeDiscountHelper as
+select Reservations.ReservationID, ConferenceEditions.Price, ConferenceEditions.Date, TimeDiscounts.NumOfDaysBefore, TimeDiscounts.Discount from Reservations
+inner join ConferenceDayReservations on Reservations.ReservationID = ConferenceDayReservations.ReservationID
+inner join ConferenceDays on ConferenceDayReservations.ConferenceDayID = ConferenceDays.ConferenceDayID
+inner join ConferenceEditions on ConferenceDays.ConferenceEditionID = ConferenceEditions.ConferenceEditionID
+inner join TimeDiscounts on ConferenceEditions.ConferenceEditionID = TimeDiscounts.ConferenceEditionID
