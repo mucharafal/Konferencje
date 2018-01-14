@@ -20,6 +20,7 @@ begin
 	where ConferenceName = @ConferenceName
 
 	set nocount on
+	if(@StudentDiscount is not null)
 	begin try
 		insert into ConferenceEditions
 		(
@@ -44,6 +45,32 @@ begin
 		declare @errorMsg nvarchar(2048)
 			= 'Cannot add Conference. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg, 1
+	end catch
+	else 
+	begin try
+		insert into ConferenceEditions
+		(
+			ConferenceID,
+			Date,
+			NumOfDay,
+			MaxMembers,
+			Price,
+			StudentDiscount
+		)
+		values
+		(
+			@ConferenceID,
+			@Date,
+			@NumOfDays,
+			@MaxMembers,
+			@Price,
+			0
+		)
+	end try
+	begin catch
+		declare @errorMsg2 nvarchar(2048)
+			= 'Cannot add Conference. Error message: ' + ERROR_MESSAGE();
+		;Throw 52000, @errorMsg2, 1
 	end catch
 end
 go
