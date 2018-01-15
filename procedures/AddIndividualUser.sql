@@ -70,24 +70,23 @@ begin
 	begin try
 		insert into Users
 		(
-			CityID,
-			PostalCode,
-			Street,
-			Number
+			
+			FirstName,
+			LastName,
+			ContactID,
+			AddressID
 		)
 		values
 		(
-			@CityID,
-			@PostalCode,
-			@Street,
-			@Number
+			@FirstName,
+			@LastName,
+			@ContactID,
+			@AddressID
 		)
 	end try
 	begin catch
-		declare @errorMsg nvarchar(2048)
+		declare @errorMsg2 nvarchar(2048)
 			= 'Cannot add Conference. Error message: ' + ERROR_MESSAGE();
-		;Throw 52000, @errorMsg, 1
+		;Throw 52000, @errorMsg2, 1
 	end catch
-	--------------------------------------------------------------------------------
-	--Dokoñczyæ
-	--------------------------------------------------------------------------------
+end;
