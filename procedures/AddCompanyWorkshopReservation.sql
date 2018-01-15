@@ -11,10 +11,10 @@ begin
 	--finding ConferenceDayID and WorkshopInstanceID
 	
 	Declare @ConferenceDayID as int
-	Set @ConferenceDayID = dbo.GetConferenceDayID(@ConferenceName, @ConferenceEditionNumber, @ConferenceDayNumber);
+	Set @ConferenceDayID = dbo.GetConferenceDayID(@ConferenceName, @ConferenceEditionNumber, @ConferenceDayNumber)
 
 	Declare @WorkshopInstanceID as int
-	Set @WorkshopInstanceID = dbo.GetWorkshopInstanceID(@ConferenceDayID, @WorkshopStartTime);
+	Set @WorkshopInstanceID = dbo.GetWorkshopInstanceID(@ConferenceDayID, @WorkshopStartTime)
 	--inserting CompanyWorkshopReservations
 	begin try
 		insert into CompanyWorkshopInstanceReservations
@@ -27,7 +27,7 @@ begin
 		(
 			@CompanyReservationID,
 			@WorkshopInstanceID,
-			@Participants,
+			@Participants
 		)
 	end try
 	begin catch
@@ -35,3 +35,4 @@ begin
 			= 'Cannot add WorkshopReservation. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg4, 1
 	end catch
+end
