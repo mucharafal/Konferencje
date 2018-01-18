@@ -39,7 +39,7 @@ check constraint correct_PostalCode
 go
 
 alter table dbo.Addresses
-add constraint correct_Street check (Addresses.Street like '[A-Z][a-z][a-z]% [A-Z,a-z]%')
+add constraint correct_Street check (Addresses.Street like '[A-Z][a-z][a-z]%[ ]%[A-Z,a-z]%')
 go
 alter table dbo.Addresses
 check constraint correct_Street

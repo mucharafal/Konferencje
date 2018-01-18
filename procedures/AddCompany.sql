@@ -1,3 +1,4 @@
+
 create procedure AddCompany
 	@CompanyName varchar(50),
 	@Email varchar(50),
@@ -7,7 +8,7 @@ create procedure AddCompany
 	@Street varchar(50),
 	@Number int
 as
-begin
+begin transaction
 --Getting CityID
 	Declare @CityID as int
 	select @CityID = CityID
@@ -30,20 +31,14 @@ begin
 			@Street,
 			@Number
 		)
-	end try
-	begin catch
-		declare @errorMsg nvarchar(2048)
-			= 'Cannot add Conference. Error message: ' + ERROR_MESSAGE();
-		;Throw 52000, @errorMsg, 1
-	end catch
 
-	Declare @AddressID as int
-	select @AddressID = AddressID
-	from Addresses 
-	where CityID = @CityID and @PostalCode = PostalCode and @Street = Street and @Number = Number
+		Declare @AddressID as int
+		select @AddressID = AddressID
+		from Addresses 
+		where CityID = @CityID and @PostalCode = PostalCode and @Street = Street and @Number = Number
 
-	--Inserting ContactDetails
-	begin try
+		--Inserting ContactDetails
+	
 		insert into ContactDetails
 		(
 			Email,
@@ -54,19 +49,12 @@ begin
 			@Email,
 			@PhoneNumber
 		)
-	end try
-	begin catch
-		declare @errorMsg1 nvarchar(2048)
-			= 'Cannot add Conference. Error message: ' + ERROR_MESSAGE();
-		;Throw 52000, @errorMsg1, 1
-	end catch
 
-	Declare @ContactID as int
-	select @ContactID = ContactID
-	from ContactDetails 
-	where Email = @Email and @PhoneNumber = PhoneNumber
+		Declare @ContactID as int
+		select @ContactID = ContactID
+		from ContactDetails 
+		where Email = @Email and @PhoneNumber = PhoneNumber
 
-	begin try
 		insert into Companies
 		(
 			CompanyName,
@@ -81,8 +69,9 @@ begin
 		)
 	end try
 	begin catch
+		rollback transaction;
 		declare @errorMsg2 nvarchar(2048)
 			= 'Cannot add Conference. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg2, 1
 	end catch
-end;
+commit transaction
