@@ -3,6 +3,7 @@ create procedure AddContactDetails (
 	@PhoneNumber numeric(9,0)
 ) as
 begin transaction
+	set nocount on
 	begin try
 	insert into ContactDetails
 		(
