@@ -9,29 +9,18 @@ create procedure AddIndividualUser (
 	@Number int
 	) 
 as
-begin transaction
+begin transaction;
 --Getting CityID
-	Declare @CityID as int
-	select @CityID = CityID
-	from Cities 
-	where CityName = @CityName
+	set nocount on
 	
 	begin try
 	--inserting Address
-		insert into Addresses
-		(
-			CityID,
-			PostalCode,
-			Street,
-			Number
-		)
-		values
-		(
-			@CityID,
-			@PostalCode,
-			@Street,
-			@Number
-		)
+		exec AddAddress @CityName, @PostalCode, @Street, @Number
+
+		Declare @CityID as int
+		select @CityID = CityID
+		from Cities 
+		where CityName = @CityName
 
 		Declare @AddressID as int
 		select @AddressID = AddressID
@@ -39,16 +28,7 @@ begin transaction
 		where CityID = @CityID and @PostalCode = PostalCode and @Street = Street and @Number = Number
 
 	--Inserting ContactDetails
-		insert into ContactDetails
-		(
-			Email,
-			PhoneNumber
-		)
-		values
-		(
-			@Email,
-			@PhoneNumber
-		)
+		exec AddContactDetails @Email, @PhoneNumber
 
 		Declare @ContactID as int
 		select @ContactID = ContactID
@@ -57,7 +37,6 @@ begin transaction
 
 		insert into Users
 		(
-			
 			FirstName,
 			LastName,
 			ContactID,
@@ -72,10 +51,9 @@ begin transaction
 		)
 	end try
 	begin catch
-		rollback transaction;
+		if @@TRANCOUNT > 0 rollback transaction;
 		declare @errorMsg2 nvarchar(2048)
 			= 'Cannot add Conference. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg2, 1
 	end catch
 commit transaction
-
