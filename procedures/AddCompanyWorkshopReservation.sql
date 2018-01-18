@@ -1,4 +1,4 @@
-create procedure AddCompanyWorkshopConferenceDayReservation
+create procedure AddCompanyWorkshopInstanceReservation
 	@CompanyReservationID int,
 	@ConferenceName varchar(50),
 	@ConferenceEditionNumber int,
@@ -7,16 +7,16 @@ create procedure AddCompanyWorkshopConferenceDayReservation
 	@WorkshopStartTime time,
 	@Participants int
 as
-begin
+begin transaction
 	--finding ConferenceDayID and WorkshopInstanceID
-	
-	Declare @ConferenceDayID as int
-	Set @ConferenceDayID = dbo.GetConferenceDayID(@ConferenceName, @ConferenceEditionNumber, @ConferenceDayNumber)
-
-	Declare @WorkshopInstanceID as int
-	Set @WorkshopInstanceID = dbo.GetWorkshopInstanceID(@ConferenceDayID, @WorkshopStartTime)
-	--inserting CompanyWorkshopReservations
 	begin try
+		Declare @ConferenceDayID as int
+		Set @ConferenceDayID = dbo.GetConferenceDayID(@ConferenceName, @ConferenceEditionNumber, @ConferenceDayNumber)
+
+		Declare @WorkshopInstanceID as int
+		Set @WorkshopInstanceID = dbo.GetWorkshopInstanceID(@ConferenceDayID, @WorkshopStartTime)
+		--inserting CompanyWorkshopReservations
+	
 		insert into CompanyWorkshopInstanceReservations
 		(
 			CompanyReservationID,
@@ -31,8 +31,9 @@ begin
 		)
 	end try
 	begin catch
+		rollback transaction;
 		declare @errorMsg4 nvarchar(2048)
 			= 'Cannot add WorkshopReservation. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg4, 1
 	end catch
-end
+commit transaction

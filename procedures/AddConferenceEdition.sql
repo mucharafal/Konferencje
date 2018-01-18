@@ -6,9 +6,10 @@ create procedure dbo.AddConferenceEdition
 	@Price money,
 	@StudentDiscount float
 as
-begin
+begin transaction
 	if (select ConferenceID from Conferences where @ConferenceName = ConferenceName) is null
 	begin
+		rollback transaction;
 		declare @errorMsg1 nvarchar(2048)
 			= 'Invalid ConferenceName';
 		;Throw 52000, @errorMsg1, 1
@@ -42,6 +43,7 @@ begin
 		)
 	end try
 	begin catch
+		rollback transaction;
 		declare @errorMsg nvarchar(2048)
 			= 'Cannot add Conference. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg, 1
@@ -68,9 +70,9 @@ begin
 		)
 	end try
 	begin catch
+		rollback transaction;
 		declare @errorMsg2 nvarchar(2048)
 			= 'Cannot add Conference. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg2, 1
 	end catch
-end
-go
+commit transaction;

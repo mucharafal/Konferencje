@@ -22,4 +22,3 @@ begin
 		;Throw 52000, @errorMsg, 1
 	end catch
 end
-go

@@ -5,7 +5,7 @@ create procedure AddCompanyConferenceDayReservation
 	@ConferenceDayNumber int,
 	@Participants int
 as
-begin
+begin transaction
 /*
 	--finding Company
 	Declare @CompanyID as int
@@ -20,13 +20,14 @@ begin
 		;Throw 52000, @errorMsg, 1
 	end
 	*/
-	--finding Conference
-	Declare @ConferenceDayID as int
-	Set @ConferenceDayID = dbo.GetConferenceDayID(@ConferenceName, @ConferenceEditionNumber, @ConferenceDayNumber);
-
-
-	--inserting CompanyConferenceDayReservations
 	begin try
+		--finding Conference
+		Declare @ConferenceDayID as int
+		Set @ConferenceDayID = dbo.GetConferenceDayID(@ConferenceName, @ConferenceEditionNumber, @ConferenceDayNumber);
+
+
+		--inserting CompanyConferenceDayReservations
+	
 		insert into CompanyConferenceDayReservations
 		(
 			CompanyReservationID,
@@ -41,8 +42,9 @@ begin
 		)
 	end try
 	begin catch
+		rollback transaction
 		declare @errorMsg4 nvarchar(2048)
 			= 'Cannot add CompanyConferenceDayReservation. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg4, 1
 	end catch
-	end;
+commit transaction
