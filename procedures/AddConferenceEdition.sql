@@ -7,25 +7,24 @@ create procedure dbo.AddConferenceEdition
 	@StudentDiscount float
 as
 begin transaction
-	if (select ConferenceID from Conferences where @ConferenceName = ConferenceName) is null
-	begin
-		rollback transaction;
-		declare @errorMsg1 nvarchar(2048)
-			= 'Invalid ConferenceName';
-		;Throw 52000, @errorMsg1, 1
-	end
-
+	set nocount on
 	Declare @ConferenceID as int
 	select @ConferenceID = ConferenceID
 	from Conferences 
 	where ConferenceName = @ConferenceName
 
-	set nocount on
-	if(@StudentDiscount is not null)
+	declare @NumOfEdition as int
+	select @NumOfEdition = count(ConferenceEditionID)
+	from ConferenceEditions
+	where ConferenceID = @ConferenceID
+
+	set @NumOfEdition = @NumOfEdition + 1
+
 	begin try
 		insert into ConferenceEditions
 		(
 			ConferenceID,
+			NumOfEdition,
 			Date,
 			NumOfDay,
 			MaxMembers,
@@ -35,44 +34,18 @@ begin transaction
 		values
 		(
 			@ConferenceID,
+			@NumOfEdition,
 			@Date,
 			@NumOfDays,
 			@MaxMembers,
 			@Price,
-			@StudentDiscount
+			isnull(@StudentDiscount, 0)
 		)
 	end try
 	begin catch
 		rollback transaction;
 		declare @errorMsg nvarchar(2048)
-			= 'Cannot add Conference. Error message: ' + ERROR_MESSAGE();
+			= 'Cannot add ConferenceEdition. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg, 1
-	end catch
-	else 
-	begin try
-		insert into ConferenceEditions
-		(
-			ConferenceID,
-			Date,
-			NumOfDay,
-			MaxMembers,
-			Price,
-			StudentDiscount
-		)
-		values
-		(
-			@ConferenceID,
-			@Date,
-			@NumOfDays,
-			@MaxMembers,
-			@Price,
-			0
-		)
-	end try
-	begin catch
-		rollback transaction;
-		declare @errorMsg2 nvarchar(2048)
-			= 'Cannot add Conference. Error message: ' + ERROR_MESSAGE();
-		;Throw 52000, @errorMsg2, 1
 	end catch
 commit transaction;
