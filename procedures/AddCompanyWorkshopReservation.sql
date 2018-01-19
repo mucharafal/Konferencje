@@ -1,5 +1,5 @@
 create procedure AddCompanyWorkshopInstanceReservation
-	@CompanyReservationID int,
+	@CompanyName varchar(50),
 	@ConferenceName varchar(50),
 	@ConferenceEditionNumber int,
 	@ConferenceDayNumber int,
@@ -8,13 +8,19 @@ create procedure AddCompanyWorkshopInstanceReservation
 	@Participants int
 as
 begin transaction
-	--finding ConferenceDayID and WorkshopInstanceID
-	begin try
+		begin try
+
+		--finding ConferenceDayID and WorkshopInstanceID
+
 		Declare @ConferenceDayID as int
 		Set @ConferenceDayID = dbo.GetConferenceDayID(@ConferenceName, @ConferenceEditionNumber, @ConferenceDayNumber)
 
 		Declare @WorkshopInstanceID as int
 		Set @WorkshopInstanceID = dbo.GetWorkshopInstanceID(@ConferenceDayID, @WorkshopStartTime)
+	
+		Declare @CompanyReservationID as int
+		set @CompanyReservationID = dbo.FindCompanyReservation( @CompanyName, @ConferenceName, @ConferenceEditionNumber );
+		
 		--inserting CompanyWorkshopReservations
 	
 		insert into CompanyWorkshopInstanceReservations
