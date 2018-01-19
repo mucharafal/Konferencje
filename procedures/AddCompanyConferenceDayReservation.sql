@@ -15,6 +15,13 @@ begin transaction
 		Declare @CompanyReservationID as int
 		set @CompanyReservationID = dbo.FindCompanyReservation( @CompanyName, @ConferenceName, @ConferenceEditionNumber );
 
+		if @CompanyReservationID is null
+		begin
+			exec AddCompanyReservation @CompanyName, @ConferenceName, @ConferenceEditionNumber
+
+			set @CompanyReservationID = dbo.FindCompanyReservation( @CompanyName, @ConferenceName, @ConferenceEditionNumber );
+		end
+
 		--inserting CompanyConferenceDayReservations
 	
 		insert into CompanyConferenceDayReservations

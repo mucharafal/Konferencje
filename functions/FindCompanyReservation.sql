@@ -17,16 +17,6 @@ begin
 		inner join Conferences on Conferences.ConferenceID = ConferenceEditions.ConferenceID
 		where CompanyID = @CompanyID and NumOfEdition = @ConferenceEditionNumber and ConferenceName = @ConferenceName
 
-		if @CompanyReservationID is null
-		begin
-			exec AddCompanyReservation @CompanyName, @ConferenceName, @ConferenceEditionNumber
-
-			select @CompanyReservationID = CompanyReservationID
-			from CompanyReservations
-			inner join ConferenceEditions on CompanyReservations.ConferenceEditionID = ConferenceEditions.ConferenceEditionID
-			inner join Conferences on Conferences.ConferenceID = ConferenceEditions.ConferenceID
-			where CompanyID = @CompanyID and NumOfEdition = @ConferenceEditionNumber and ConferenceName = @ConferenceName
-		end
 
 		return @CompanyReservationID
 end
