@@ -53,7 +53,7 @@ begin transaction;
 	begin catch
 		if @@TRANCOUNT > 0 rollback transaction;
 		declare @errorMsg2 nvarchar(2048)
-			= 'Cannot add Conference. Error message: ' + ERROR_MESSAGE();
+			= 'Cannot add Individual user. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg2, 1
 	end catch
 commit transaction
