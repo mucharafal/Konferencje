@@ -31,12 +31,13 @@ begin
 	end
 
 	--Przetestowaæ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 	Declare @ConferenceDayID as int
 	select @ConferenceDayID = b.ConferenceDayID from
 	(select top 1 * from 
-		(select top (@ConferenceDayNumber) * from ConferenceDays as d where d.ConferenceEditionID = @ConferenceEditionID order by d.ConferenceDayDate ) as c
-		order by c.ConferenceDayDate desc
+		(select top (@ConferenceDayNumber) * , ROW_NUMBER() over( order by c.ConferenceDayDate desc ) as pozycja  from ConferenceDays as d where d.ConferenceEditionID = @ConferenceEditionID order by d.ConferenceDayDate ) as c
 	) as b
+	where pozycja = @ConferenceDayNumber
 
 	if(@ConferenceEditionID is null) 
 	begin
