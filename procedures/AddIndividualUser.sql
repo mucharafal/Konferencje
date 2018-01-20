@@ -6,7 +6,8 @@ create procedure AddIndividualUser (
 	@CityName varchar(50),
 	@PostalCode char(6),
 	@Street varchar(50),
-	@Number int
+	@Number int,
+	@StudentID int
 	) 
 as
 declare @AddedUserID as int
@@ -25,7 +26,7 @@ begin transaction;
 		Declare @ContactID as int
 		exec @ContactID = AddContactDetails @Email, @PhoneNumber
 
-		exec @AddedUserID = AddUser @FirstName, @LastName, @ContactID, @AddressID
+		exec @AddedUserID = AddUser @FirstName, @LastName, @ContactID, @AddressID, @StudentID
 
 	end try
 	begin catch
