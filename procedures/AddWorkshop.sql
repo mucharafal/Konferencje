@@ -8,7 +8,7 @@ create procedure AddWorkshop (
 	@ConferenceEditionNumber int,
 	@ConferenceDayNumber int,
 	@Time time,
-	@MaxMembers money
+	@MaxMembers int
 ) as
 begin transaction
 	begin try
