@@ -1,20 +1,12 @@
 create procedure AddCompanyReservation (
-	@CompanyName varchar(50),
-	@ConferenceName varchar(50),
-	@ConferenceEditionNumber int
+	@CompanyID int,
+	@ConferenceEditionID int
 ) as
+declare @AddedCompanyReservationID as int
 begin transaction
 
-	Declare @CompanyID as int
-	select @CompanyID = CompanyID
-	from Companies 
-	where CompanyName = @CompanyName
-
-	Declare @ConferenceEditionID as int
-	select @ConferenceEditionID = ConferenceEditionID
-	from Conferences
-	inner join ConferenceEditions on Conferences.ConferenceID = ConferenceEditions.ConferenceID
-	where NumOfEdition = @ConferenceEditionNumber and ConferenceName = @ConferenceName
+	declare @date as date
+	set @date = getdate()
 
 	begin try
 		insert into CompanyReservations (
@@ -25,7 +17,7 @@ begin transaction
 		)
 		values (
 			@CompanyID,
-			GETDATE(),
+			@date,
 			0,
 			@ConferenceEditionID
 		)
@@ -36,4 +28,10 @@ begin transaction
 			= 'Cannot add CompanyyReservation. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg4, 1
 	end catch
+
+	select @AddedCompanyReservationID = CompanyReservationID
+	from CompanyReservations
+	where @CompanyID = CompanyID and @ConferenceEditionID = ConferenceEditionID and @date = date
+
 commit transaction
+return @AddedCompanyReservationID

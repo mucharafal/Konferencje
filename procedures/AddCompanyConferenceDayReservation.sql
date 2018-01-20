@@ -1,26 +1,11 @@
 create procedure AddCompanyConferenceDayReservation
-	@CompanyName varchar(50),
-	@ConferenceName varchar(50),
-	@ConferenceEditionNumber int,
-	@ConferenceDayNumber int,
+	@CompanyReservationID int,
+	@ConferenceDayID int,
 	@Participants int
 as
 begin transaction
 	set nocount on
 	begin try
-		--finding Conference
-		Declare @ConferenceDayID as int
-		Set @ConferenceDayID = dbo.GetConferenceDayID(@ConferenceName, @ConferenceEditionNumber, @ConferenceDayNumber);
-
-		Declare @CompanyReservationID as int
-		set @CompanyReservationID = dbo.FindCompanyReservation( @CompanyName, @ConferenceName, @ConferenceEditionNumber );
-
-		if @CompanyReservationID is null
-		begin
-			exec AddCompanyReservation @CompanyName, @ConferenceName, @ConferenceEditionNumber
-
-			set @CompanyReservationID = dbo.FindCompanyReservation( @CompanyName, @ConferenceName, @ConferenceEditionNumber );
-		end
 
 		--inserting CompanyConferenceDayReservations
 	

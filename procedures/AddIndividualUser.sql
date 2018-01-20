@@ -9,46 +9,24 @@ create procedure AddIndividualUser (
 	@Number int
 	) 
 as
+declare @AddedUserID as int
 begin transaction;
 --Getting CityID
 	set nocount on
 	
 	begin try
 	--inserting Address
-		exec AddAddress @CityName, @PostalCode, @Street, @Number
-
-		Declare @CityID as int
-		select @CityID = CityID
-		from Cities 
-		where CityName = @CityName
 
 		Declare @AddressID as int
-		select @AddressID = AddressID
-		from Addresses 
-		where CityID = @CityID and @PostalCode = PostalCode and @Street = Street and @Number = Number
+		exec @AddressID = AddAddress @CityName, @PostalCode, @Street, @Number
 
 	--Inserting ContactDetails
-		exec AddContactDetails @Email, @PhoneNumber
-
+		
 		Declare @ContactID as int
-		select @ContactID = ContactID
-		from ContactDetails 
-		where Email = @Email and @PhoneNumber = PhoneNumber
+		exec @ContactID = AddContactDetails @Email, @PhoneNumber
 
-		insert into Users
-		(
-			FirstName,
-			LastName,
-			ContactID,
-			AddressID
-		)
-		values
-		(
-			@FirstName,
-			@LastName,
-			@ContactID,
-			@AddressID
-		)
+		exec @AddedUserID = AddUser @FirstName, @LastName, @ContactID, @AddressID
+
 	end try
 	begin catch
 		if @@TRANCOUNT > 0 rollback transaction;
@@ -57,3 +35,4 @@ begin transaction;
 		;Throw 52000, @errorMsg2, 1
 	end catch
 commit transaction
+return @AddedUserID

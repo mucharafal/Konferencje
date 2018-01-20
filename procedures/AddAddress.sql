@@ -5,6 +5,7 @@ create procedure AddAddress (
 	@Number int
 )
 as
+declare @AddedAddressID as int
 begin transaction
 	set nocount on
 
@@ -36,4 +37,8 @@ begin transaction
 			= 'Cannot add Address. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg, 1
 	end catch
+	select @AddedAddressID = AddressID
+	from Addresses
+	where @CityID = CityID and @PostalCode = PostalCode and @Street = Street and @Number = Number
 commit transaction
+return @AddedAddressID

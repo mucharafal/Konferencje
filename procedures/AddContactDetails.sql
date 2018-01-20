@@ -2,6 +2,7 @@ create procedure AddContactDetails (
 	@Email varchar(50),
 	@PhoneNumber numeric(9,0)
 ) as
+declare @AddedContactDetails as int
 begin transaction
 	set nocount on
 	begin try
@@ -22,4 +23,8 @@ begin transaction
 			= 'Cannot add Contact Details. Error message: ' + ERROR_MESSAGE();
 		;Throw 52000, @errorMsg, 1
 	end catch
+	select @AddedContactDetails = ContactDetails.ContactID
+	from ContactDetails
+	where @Email = Email and @PhoneNumber = PhoneNumber
 commit transaction
+return @AddedContactDetails
