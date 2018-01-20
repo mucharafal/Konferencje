@@ -4,8 +4,9 @@ create function AreFreePlaces (
 as
 begin
 	declare @sum as int
-	select @sum = sum(AvaliablePlaces) from ParticipantsInConferenceDay as vp
-	inner join ConferenceDays as cd on cd.ConferenceDayID = vp.ConferenceDayID
+	select @sum = sum(isnull(AvaliablePlaces, ce.MaxMembers)) from ConferenceDays as cd
+	inner join ConferenceEditions as ce on ce.ConferenceEditionID = cd.ConferenceEditionID
+	left outer join ParticipantsInConferenceDay as vp on cd.ConferenceDayID = vp.ConferenceDayID
 	where @ConferenceEditionID = cd.ConferenceEditionID
 	group by cd.ConferenceEditionID
 	declare @res as int
