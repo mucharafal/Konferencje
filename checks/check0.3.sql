@@ -25,7 +25,7 @@ check constraint correct_PhoneNumber
 go
 
 alter table dbo.ContactDetails
-add constraint correct_Email check (ContactDetails.Email like '[a-z,A-Z,_,0-9,-][a-z,A-Z,_,0-9,-]%@[a-z,0-9,_,-][a-z,0-9,_,-]%.[a-z][a-z]%')
+add constraint correct_Email check (ContactDetails.Email like '[a-z,A-Z,_,0-9,-][a-z,A-Z,_,0-9,-,.]%@[a-z,0-9,_,-][a-z,0-9,_,-]%.[a-z][a-z]%')
 go
 alter table dbo.ContactDetails
 check constraint correct_Email
@@ -39,7 +39,7 @@ check constraint correct_PostalCode
 go
 
 alter table dbo.Addresses
-add constraint correct_Street check (Addresses.Street like '[A-Z][a-z][a-z]%[ ]%[A-Z,a-z]%')
+add constraint correct_Street check (Addresses.Street like '[A-Z][a-z,A-Z, ]%')
 go
 alter table dbo.Addresses
 check constraint correct_Street
