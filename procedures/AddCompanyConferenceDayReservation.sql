@@ -1,7 +1,8 @@
 create procedure AddCompanyConferenceDayReservation
 	@CompanyReservationID int,
 	@ConferenceDayID int,
-	@Participants int
+	@Participants int,
+	@Students int
 as
 begin transaction
 	set nocount on
@@ -13,13 +14,15 @@ begin transaction
 		(
 			CompanyReservationID,
 			Places,
-			ConferenceDayID
+			ConferenceDayID, 
+			Students
 		)
 		values
 		(
 			@CompanyReservationID,
 			@Participants,
-			@ConferenceDayID
+			@ConferenceDayID,
+			isnull(@Students, 0)
 		)
 	end try
 	begin catch
