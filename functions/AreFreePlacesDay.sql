@@ -3,7 +3,9 @@ create function AreFreePlacesDay (
 ) returns bit as
 begin 
 	declare @res as bit
-	if (select AvaliablePlaces from ConferenceDayID where @ConferenceDayID = ConferenceDayID) > 0
+	if (select AvaliablePlaces 
+		from ParticipantsInConferenceDay 
+		where @ConferenceDayID = ConferenceDayID) > 0
 		set @res = 1
 	else 
 		set @res = 0

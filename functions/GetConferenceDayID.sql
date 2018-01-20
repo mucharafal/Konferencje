@@ -31,15 +31,16 @@ begin
 	end
 
 	--Przetestowaæ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 	Declare @ConferenceDayID as int
-	select @ConferenceDayID = b.ConferenceDayID from
-	(select top 1 * from 
-		(select top (@ConferenceDayNumber) * , ROW_NUMBER() over( order by c.ConferenceDayDate desc ) as pozycja  from ConferenceDays as d where d.ConferenceEditionID = @ConferenceEditionID order by d.ConferenceDayDate ) as c
-	) as b
-	where pozycja = @ConferenceDayNumber
+	
+	select @ConferenceDayID = c.ConferenceDayID from
+	( select * , ROW_NUMBER () over ( order by d.ConferenceDayDate ) as rn
+		from ConferenceDays as d 
+		where d.ConferenceEditionID = @ConferenceEditionID 
+	) as c
+	where c.rn = @ConferenceDayNumber
 
-	if(@ConferenceEditionID is null) 
+	if(@ConferenceDayID is null) 
 	begin
 		declare @errorMsg3 nvarchar(2048)
 			= 'No such conference day'
