@@ -25,7 +25,7 @@ check constraint correct_PhoneNumber
 go
 
 alter table dbo.ContactDetails
-add constraint correct_Email check (ContactDetails.Email like '[a-z,A-Z,_,0-9,-][a-z,A-Z,_,0-9,-]%@[a-z,0-9,_,-][a-z,0-9,_,-]%.[a-z][a-z]%')
+add constraint correct_Email check (ContactDetails.Email like '[a-z,A-Z,_,0-9,-][a-z,A-Z,_,0-9,-,.]%@[a-z,0-9,_,-][a-z,0-9,_,-]%.[a-z][a-z]%')
 go
 alter table dbo.ContactDetails
 check constraint correct_Email
@@ -39,7 +39,7 @@ check constraint correct_PostalCode
 go
 
 alter table dbo.Addresses
-add constraint correct_Street check (Addresses.Street like '[A-Z][a-z][a-z]%[ ]%[A-Z,a-z]%')
+add constraint correct_Street check (Addresses.Street like '[A-Z][a-z,A-Z, ]%')
 go
 alter table dbo.Addresses
 check constraint correct_Street
@@ -173,4 +173,17 @@ add constraint no_conflicts check (dbo.MakesConflicts(WorkshopReservationID) = 0
 go
 alter table dbo.WorkshopReservations
 check constraint no_conflicts
+go
+
+--ConferenceDayReservation
+alter table dbo.ConferenceDayReservations
+add constraint correct_num_of_participants_CD check (
+	(select AvaliablePlaces 
+	from ParticipantsInConferenceDay 
+	where (select ConferenceDayID 
+		from ConferenceDayReservations as c 
+		where c.ConferenceDayReservationID = ConferenceDayReservationID ) = ConferenceDayID ) >= 0 )
+go
+alter table dbo.WorkshopReservations
+check constraint correct_num_of_participants_CD
 go
