@@ -174,3 +174,16 @@ go
 alter table dbo.WorkshopReservations
 check constraint no_conflicts
 go
+
+--ConferenceDayReservation
+alter table dbo.ConferenceDayReservations
+add constraint correct_num_of_participants_CD check (
+	(select AvaliablePlaces 
+	from ParticipantsInConferenceDay 
+	where (select ConferenceDayID 
+		from ConferenceDayReservations as c 
+		where c.ConferenceDayReservationID = ConferenceDayReservationID ) = ConferenceDayID ) >= 0 )
+go
+alter table dbo.WorkshopReservations
+check constraint correct_num_of_participants_CD
+go
