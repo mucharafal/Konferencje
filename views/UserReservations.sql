@@ -1,5 +1,5 @@
 create view UserReservations as
-select r.UserID, r.ReservationID, c.ConferenceName, ce.NumOfEdition, cd.ConferenceDayDate, isnull(w.WorkshopName, 'Brak zarezerwowanych warsztatów na dany dzieñ') from Reservations as r
+select r.UserID, r.ReservationID, c.ConferenceName, ce.NumOfEdition, cd.ConferenceDayDate, isnull(w.WorkshopName, 'Brak zarezerwowanych warsztatów na dany dzieñ') as WorkshopName from Reservations as r
 inner join ConferenceDayReservations as cdr on cdr.ReservationID = r.ReservationID
 inner join ConferenceEditions as ce on ce.ConferenceEditionID = r.ConferenceEditionID
 inner join ConferenceDays as cd on cd.ConferenceEditionID = ce.ConferenceEditionID and cdr.ConferenceDayID = cd.ConferenceDayID
