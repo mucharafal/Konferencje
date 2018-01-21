@@ -1,16 +1,10 @@
 create procedure RemoveAddress (
-    @AddressID
+    @AddressID int
 ) as 
 begin transaction
     begin try
         delete from Addresses
-        left join Companies as c 
-        on c.AddressID = Addresses.AddressID 
-        left join Users as u 
-        on u.AddressID = Addresses.AddressID 
         where @AddressID = Addresses.AddressID
-        and c.AddressID = null
-        and u.AddressID = null
     end try
     begin catch
 		rollback transaction;
