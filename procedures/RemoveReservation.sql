@@ -1,5 +1,5 @@
 create procedure RemoveReservation (
-    @ReservationID int,
+    @ReservationID int
 ) as
 begin transaction
     begin try
