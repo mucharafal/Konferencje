@@ -30,7 +30,6 @@ begin
 		;return cast(@errorMsg2 as int)
 	end
 
-	--Przetestowaæ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	Declare @ConferenceDayID as int
 	
 	select @ConferenceDayID = c.ConferenceDayID from

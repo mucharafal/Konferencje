@@ -3,7 +3,9 @@ create function AreFreePlacesWorkshops (
 ) returns bit as
 begin 
 	declare @res as bit
-	if isnull((select AvaliablePlaces from ParticipantsInWorkshopInstance where @WorkshopInstanceID = WorkshopInstanceID), 1) > 0
+	if isnull((select AvaliablePlaces 
+			from ParticipantsInWorkshopInstance 
+			where @WorkshopInstanceID = WorkshopInstanceID), 1) > 0
 		set @res = 1
 	else 
 		set @res = 0

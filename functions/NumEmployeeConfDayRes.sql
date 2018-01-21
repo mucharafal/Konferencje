@@ -5,7 +5,8 @@ begin
 	declare @res as int
 	select @res = count(EmplyeeConferenceDayReservationID)
 	from EmployeeConferenceDayReservations as ec
-	inner join CompanyConferenceDayReservations as cc on ec.CompanyConferenceDayReservationID = cc.CompanyConferenceDayReservationID
+	inner join CompanyConferenceDayReservations as cc 
+	on ec.CompanyConferenceDayReservationID = cc.CompanyConferenceDayReservationID
 	where @ConferenceDayID = cc.ConferenceDayID
 
 	return @res
