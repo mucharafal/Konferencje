@@ -12,7 +12,8 @@ begin transaction
         if @CompanyID <> null
             delete from Companies
             where @CompanyID = CompanyID
-            exec RemoveAddress(@AddressID);
+            exec RemoveAddress @AddressID;
+	end try
     begin catch
         if @@TRANCOUNT > 0 rollback transaction;
 		declare @errorMsg nvarchar(2048)

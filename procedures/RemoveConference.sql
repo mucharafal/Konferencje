@@ -4,8 +4,6 @@ create procedure RemoveConference (
 begin transaction 
     begin try
         delete from Conferences
-        left join ConferenceEditions as ce 
-        on ce.ConferenceID = Conferences.ConferenceID 
         where Conferences.ConferenceID = @ConferenceID 
     end try
     begin catch

@@ -1,5 +1,5 @@
 create procedure RemovePrivateReservation (
-    @PrivateRezervationID int
+    @PrivateReservationID int
 ) as
 begin transaction 
     declare @ReservationID as int
@@ -14,7 +14,7 @@ begin transaction
         where PrivateReservationID = @PRivateReservationID 
         and Paid = 0
 
-        exec RemoveReservation( @ReservationID )
+        exec RemoveReservation @ReservationID 
     end try
     begin catch
 		if @@TRANCOUNT > 0 rollback transaction;
