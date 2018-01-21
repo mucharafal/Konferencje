@@ -177,13 +177,35 @@ go
 
 --ConferenceDayReservation
 alter table dbo.ConferenceDayReservations
-add constraint correct_num_of_participants_CD check (
-	(select AvaliablePlaces 
-	from ParticipantsInConferenceDay 
-	where (select ConferenceDayID 
-		from ConferenceDayReservations as c 
-		where c.ConferenceDayReservationID = ConferenceDayReservationID ) = ConferenceDayID ) >= 0 )
+add constraint correct_num_of_participants_CD check ( dbo.NumberOfFreePlacesConferenceDay(dbo.GetConferenceDayIDFromConferenceDayReservationID(ConferenceDayReservationID)) >= 0 )
+go
+alter table dbo.ConferenceDayReservations
+check constraint correct_num_of_participants_CD
+go
+
+--CompanyConferenceDayReservation
+
+alter table dbo.CompanyConferenceDayReservations
+add constraint correct_num_of_participants_CCD check ( dbo.NumberOfFreePlacesConferenceDay(dbo.GetConferenceDayIDFromCompanyConferenceDayReservationID(CompanyConferenceDayReservationID)) >= 0 )
+go
+alter table dbo.CompanyConferenceDayReservations
+check constraint correct_num_of_participants_CCD
+go
+
+--WorkshopReservation
+
+alter table dbo.WorkshopReservations
+add constraint correct_num_of_participants_WD check ( dbo.NumberOfFreePlacesWorkshop(dbo.GetWorkshopIDFromWorkshopReservationID(WorkshopReservationID)) >= 0 )
 go
 alter table dbo.WorkshopReservations
-check constraint correct_num_of_participants_CD
+check constraint correct_num_of_participants_WD
+go
+
+--CompanyWorkshopReservation
+
+alter table dbo.CompanyWorkshopInstanceReservations
+add constraint correct_num_of_participants_CWD check ( dbo.NumberOfFreePlacesWorkshop(dbo.GetWorkshopInstanceIDFromCompanyWorkshopReservationID(CompanyWorkshopInstanceReservationID)) >= 0 )
+go
+alter table dbo.CompanyWorkshopInstanceReservations
+check constraint correct_num_of_participants_CWD
 go
