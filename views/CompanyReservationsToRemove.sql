@@ -4,4 +4,4 @@ inner join ConferenceEditions as ce on ce.ConferenceEditionID = cr.ConferenceEdi
 inner join Conferences as c on ce.ConferenceID = c.ConferenceID
 inner join PriceForCompanyReservation as prices on prices.CompanyReservationID = cr.CompanyReservationID
 where cr.Paid = 0 
-and DATEADD(day, 14, getdate()) > cr.Date
+and DATEADD(day, 7, cr.Date) > getdate()
